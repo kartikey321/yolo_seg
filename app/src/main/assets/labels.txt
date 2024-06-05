@@ -1,3 +1,4 @@
+lan_disconnected
 mode_connected
 mode_disconnected
 power_connected

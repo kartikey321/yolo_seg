@@ -6,30 +6,25 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <androidx.camera.view.PreviewView
-        android:id="@+id/previewView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintHeight_percent="0.7"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <com.example.yolosegmentation.view.PolygonView
-        android:id="@+id/polygonView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintHeight_percent="0.7"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_alignTop="@id/previewView"
-        android:layout_alignBottom="@id/previewView" />
-
-    <TextView
-        android:id="@+id/textView"
+    <Button
+        android:id="@+id/btnLiveCamera"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:text="TextView"
+        android:text="Start Live Camera"
+        app:layout_constraintBottom_toTopOf="@+id/btnPickImage"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.449"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/previewView" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.925" />
+
+    <Button
+        android:id="@+id/btnPickImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pick Image from Gallery"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="91dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,7 @@
+mode_connected
+mode_disconnected
+power_connected
+power_disconnected
+speaker
+usb_connected
+usb_disconnected

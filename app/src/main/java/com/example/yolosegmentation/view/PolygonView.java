@@ -1,6 +1,7 @@
 package com.example.yolosegmentation.view;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
@@ -20,6 +21,7 @@ public class PolygonView extends View {
     private Paint boxPaint;
     private int previewWidth;
     private int previewHeight;
+    private Bitmap imageBitmap;
 
     public PolygonView(Context context) {
         super(context);
@@ -38,8 +40,8 @@ public class PolygonView extends View {
 
     private void init() {
         paint = new Paint();
-        paint.setColor(0xFFFF0000); // Red color
-        paint.setStyle(Paint.Style.STROKE);
+        paint.setColor(0x4DFF0000); // Red color
+        paint.setStyle(Paint.Style.FILL_AND_STROKE);
         paint.setStrokeWidth(5f);
 
         textPaint = new Paint();
@@ -63,9 +65,19 @@ public class PolygonView extends View {
         this.previewHeight = height;
     }
 
+    public void setImageBitmap(Bitmap bitmap) {
+        this.imageBitmap = bitmap;
+        invalidate();
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+
+        if (imageBitmap != null) {
+            // Draw the bitmap as the background
+            canvas.drawBitmap(imageBitmap, null, new android.graphics.Rect(0, 0, getWidth(), getHeight()), null);
+        }
 
         if (detections == null || detections.isEmpty()) {
             return;
@@ -76,18 +88,54 @@ public class PolygonView extends View {
         double imgRatio = (double) previewWidth / previewHeight;
         double newWidth = previewWidth * factorX;
         double newHeight = newWidth / imgRatio;
-        double factorY = newHeight / previewHeight;
+        double factorY = (double)(getHeight() / previewHeight);
         double pady = (getHeight() - newHeight) / 2;
-
         for (Map<String, Object> detection : detections) {
+            switch((String)( detection.get("tag"))){
+    /*
+    mode_connected
+mode_disconnected
+power_connected
+power_disconnected
+speaker
+usb_connected
+usb_disconnected
+     */
+                case "mode_connected":textPaint.setColor(0xFF00FF00);
+                paint.setColor(0xFF00FF0);
+
+                    break;
+                case "mode_disconnected":textPaint.setColor(0xFFFF0000);
+                    paint.setColor(0x80FF0000);
+                    break;
+                case "power_connected":textPaint.setColor(0xFF00FF00);
+                    paint.setColor(0xFF00FF0);
+                    break;
+                case "power_disconnected":textPaint.setColor(0xFFFF0000);
+                    paint.setColor(0x80FF0000);
+                    break;
+                case "speaker":textPaint.setColor(0xFF00FF00);
+                    paint.setColor(0xFF00FF0);
+                    break;
+                case "usb_connected":textPaint.setColor(0xFF00FF00);
+                    paint.setColor(0xFF00FF0);
+                    break;
+                case "usb_disconnected":textPaint.setColor(0xFFFF0000);
+                    paint.setColor(0x80FF0000);
+                    break;
+                default:textPaint.setColor(0xFF00FF00);
+                    paint.setColor(0xFF00FF0);
+                    break;
+
+            }
             // Handle polygons
             List<Map<String, Double>> polygons = (List<Map<String, Double>>) detection.get("polygons");
             if (polygons != null && !polygons.isEmpty()) {
                 Path path = new Path();
                 boolean firstPoint = true;
                 for (Map<String, Double> point : polygons) {
-                    float x = (float) (point.get("x") * factorX);
-                    float y = (float) (point.get("y") * factorY + pady);
+                    float x = (float) (point.get("x") * factorX+pady);
+                    float y = (float) (point.get("y") * factorY+pady+pady);
 
                     if (firstPoint) {
                         path.moveTo(x, y);
@@ -104,12 +152,12 @@ public class PolygonView extends View {
             float[] box = (float[]) detection.get("box");
             if (box != null && box.length == 5) {
                 float left = box[0] * (float) factorX;
-                float top = box[1] * (float) factorY + (float) pady;
+                float top = box[1] * (float) factorY ;
                 float right = box[2] * (float) factorX;
-                float bottom = box[3] * (float) factorY + (float) pady;
+                float bottom = box[3] * (float) factorY ;
                 float confidence = box[4] * 100;
 
-                canvas.drawRect(left, top, right, bottom, boxPaint);
+              //  canvas.drawRect(left, top, right, bottom, boxPaint);
                 canvas.drawText(String.format("%s %.0f%%", detection.get("tag"), confidence), left, top - 10, textPaint);
             }
         }

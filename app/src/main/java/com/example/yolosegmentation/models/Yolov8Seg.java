@@ -210,8 +210,9 @@ public class Yolov8Seg extends Yolo {
         List<Map<String, Double>> convertedPolygon = new ArrayList<>();
         for (Point point : polygon) {
             Map<String, Double> pointMap = new HashMap<>();
-            pointMap.put("x", point.x * source_width / mask_width);
-            pointMap.put("y", point.y * source_height / mask_height);
+
+            pointMap.put("x", point.x *(double) (source_width / mask_width));
+            pointMap.put("y", point.y *(double) (source_height / mask_height));
             convertedPolygon.add(pointMap);
         }
 //            converted_polygons.add(convertedPolygon);
